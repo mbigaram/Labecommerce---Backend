@@ -34,18 +34,18 @@ export const products: TProduto[] = [
 ]
 
 export const purchase: TPurchase[] = [
-  {
-    userId: "u1",
-    productId: "p1",
-    quantity: 1,
-    totalPrice: 1
-  },
-  {
-    userId: "u2",
-    productId: "p2",
-    quantity: 1,
-    totalPrice: 2
-  }
+  // {
+  //   userId: "u1",
+  //   productId: "p1",
+  //   quantity: 1,
+  //   totalPrice: 1
+  // },
+  // {
+  //   userId: "u2",
+  //   productId: "p2",
+  //   quantity: 1,
+  //   totalPrice: 2
+  // }
 ]
 
 export function createUser(id: string, email: string, password: string): TUser[] {
