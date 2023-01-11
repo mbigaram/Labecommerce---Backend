@@ -28,20 +28,7 @@ exports.products = [
         category: types_1.PRODUCT_CATEGORY.CLOTHES_AND_SHOES,
     }
 ];
-exports.purchase = [
-    {
-        userId: "u1",
-        productId: "p1",
-        quantity: 1,
-        totalPrice: 1
-    },
-    {
-        userId: "u2",
-        productId: "p2",
-        quantity: 1,
-        totalPrice: 2
-    }
-];
+exports.purchase = [];
 function createUser(id, email, password) {
     const userToAdd = {
         id: id,

@@ -25,49 +25,166 @@ console.table((0, database_1.queryProductsByName)("produto2"));
 console.table((0, database_1.createPurchase)("u003", "p004", 2, 1600));
 console.table((0, database_1.getAllPurchasesFromUserId)("u1"));
 app.get('/users', (req, res) => {
-    res.status(200).send(database_1.users);
+    try {
+        res.status(200).send(database_1.users);
+    }
+    catch (error) {
+        console.log(error);
+        if (res.statusCode === 200) {
+            res.status(500);
+        }
+        res.send(error.message);
+    }
 });
 app.get('/products', (req, res) => {
-    res.status(200).send(database_1.products);
+    try {
+        res.status(200).send(database_1.products);
+    }
+    catch (error) {
+        console.log(error);
+        if (res.statusCode === 200) {
+            res.status(500);
+        }
+        res.send(error.message);
+    }
 });
 app.get('/products/search', (req, res) => {
-    const q = req.query.q;
-    const result = database_1.products.filter((product) => {
-        return product.name.toLowerCase().includes(q.toLowerCase());
-    });
-    res.status(200).send(result);
+    try {
+        const q = req.query.q;
+        const result = database_1.products.filter((product) => {
+            return product.name.toLowerCase().includes(q.toLowerCase());
+        });
+        if (result !== undefined) {
+            if (q.length < 1) {
+                res.status(400);
+                throw new Error("O nome deve ter no minimo 1 caracteres");
+            }
+        }
+        if (result.length < 1) {
+            res.status(404);
+            throw new Error("Produto não encontrado");
+        }
+        res.status(200).send(result);
+    }
+    catch (error) {
+        console.log(error);
+        if (res.statusCode === 200) {
+            res.status(500);
+        }
+        res.send(error.message);
+    }
 });
 app.post('/users', (req, res) => {
-    const { id, email, password } = req.body;
-    const newUser = {
-        id,
-        email,
-        password
-    };
-    database_1.users.push(newUser);
-    res.status(201).send('Usuario registrado com sucesso!');
+    try {
+        const { id, email, password } = req.body;
+        const newUser = {
+            id,
+            email,
+            password
+        };
+        if (newUser.id.length < 1 || newUser.email.length < 1) {
+            res.status(400);
+            throw new Error("Email ou id faltando no cadastro");
+        }
+        if (newUser.password < 1) {
+            res.status(400);
+            throw new Error("Password faltando no cadastro");
+        }
+        const searchId = database_1.users.find((user) => {
+            return user.id === newUser.id;
+        });
+        const searchEmail = database_1.users.find((user) => {
+            return user.email === newUser.email;
+        });
+        if (searchId || searchEmail) {
+            res.status(400);
+            throw new Error("Email ou id ja cadastrado");
+        }
+        database_1.users.push(newUser);
+        res.status(201).send('Usuario registrado com sucesso!');
+    }
+    catch (error) {
+        console.log(error);
+        if (res.statusCode === 200) {
+            res.status(500);
+        }
+        res.send(error.message);
+    }
 });
 app.post('/products', (req, res) => {
-    const { id, name, price, category } = req.body;
-    const newProduct = {
-        id,
-        name,
-        price,
-        category
-    };
-    database_1.products.push(newProduct);
-    res.status(201).send('Produto registrado com sucesso!');
+    try {
+        const { id, name, price, category } = req.body;
+        const newProduct = {
+            id,
+            name,
+            price,
+            category
+        };
+        if (newProduct.id.length < 1 || newProduct.name.length < 1 || newProduct.category.length < 1) {
+            res.status(400);
+            throw new Error("Informações faltando no cadastro de produtos");
+        }
+        if (newProduct.price < 1) {
+            res.status(400);
+            throw new Error("Preço faltando no cadastro de produtos");
+        }
+        const searchIdProduct = database_1.products.find((product) => {
+            return product.id === newProduct.id;
+        });
+        if (searchIdProduct) {
+            res.status(400);
+            throw new Error("Id ja cadastrado");
+        }
+        database_1.products.push(newProduct);
+        res.status(201).send('Produto registrado com sucesso!');
+    }
+    catch (error) {
+        console.log(error);
+        if (res.statusCode === 200) {
+            res.status(500);
+        }
+        res.send(error.message);
+    }
 });
 app.post('/purchase', (req, res) => {
-    const { userId, productId, quantity, totalPrice } = req.body;
-    const newPurchase = {
-        userId,
-        productId,
-        quantity,
-        totalPrice,
-    };
-    database_1.purchase.push(newPurchase);
-    res.status(201).send('Compra registrada com sucesso!');
+    try {
+        const { userId, productId, quantity, totalPrice } = req.body;
+        const newPurchase = {
+            userId,
+            productId,
+            quantity,
+            totalPrice,
+        };
+        if (newPurchase.userId.length < 1 || newPurchase.productId.length < 1 || newPurchase.quantity < 1) {
+            res.status(400);
+            throw new Error("Informações incompletas");
+        }
+        const searchIdUser = database_1.users.find((idUser) => {
+            return idUser.id === newPurchase.userId;
+        });
+        const searchIdProduct = database_1.products.find((idProduct) => {
+            return idProduct.id === newPurchase.productId;
+        });
+        if (searchIdUser && searchIdProduct) {
+            const total = searchIdProduct.price * newPurchase.quantity;
+            newPurchase.totalPrice = total;
+            database_1.purchase.push(newPurchase);
+            res.status(201).send("Compra registrada com sucesso!");
+        }
+        if (!searchIdUser) {
+            res.status(404).send("Usuario não existe");
+        }
+        else {
+            res.status(404).send("Produto não existe no estoque");
+        }
+    }
+    catch (error) {
+        console.log(error);
+        if (res.statusCode === 200) {
+            res.status(500);
+        }
+        res.send(error.message);
+    }
 });
 app.get("/products/:id", (req, res) => {
     const id = req.params.id;
