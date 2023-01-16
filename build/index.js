@@ -187,88 +187,149 @@ app.post('/purchase', (req, res) => {
     }
 });
 app.get("/products/:id", (req, res) => {
-    const id = req.params.id;
-    const result = database_1.products.find((product) => {
-        return product.id === id;
-    });
-    res.status(200).send(result);
+    try {
+        const id = req.params.id;
+        const product = database_1.products.find((product) => product.id === id);
+        if (!product) {
+            res.status(404);
+            throw new Error("Produto não encontrado");
+        }
+        res.status(200).send(product);
+    }
+    catch (error) {
+        console.log(error);
+        if (res.statusCode === 200) {
+            res.status(500);
+        }
+        res.send(error.message);
+    }
 });
 app.get('/users/:id/purchases', (req, res) => {
-    const id = req.params.id;
-    const getUserById = database_1.users.find((user) => user.id === id);
-    if (getUserById) {
-        const getPurchaseUserId = database_1.purchase.filter((p) => {
-            return p.userId === getUserById.id;
-        });
-        if (getPurchaseUserId) {
-            res.status(200).send(getPurchaseUserId);
+    try {
+        const id = req.params.id;
+        const idUser = database_1.users.find((user) => user.id === id);
+        if (!idUser) {
+            res.status(404);
+            throw new Error("Usuario não existe");
         }
+        const PurchaseidUser = database_1.purchase.filter((p) => {
+            return p.userId === idUser.id;
+        });
+        if (!PurchaseidUser[0]) {
+            res.status(201).send("Usuario não realizou nenhuma compra");
+        }
+        else {
+            res.status(200).send(PurchaseidUser);
+        }
+    }
+    catch (error) {
+        console.log(error);
+        if (res.statusCode === 200) {
+            res.status(500);
+        }
+        res.send(error.message);
     }
 });
 app.delete("/users/:id", (req, res) => {
-    const id = req.params.id;
-    const userById = database_1.users.findIndex((user) => {
-        return user.id === id;
-    });
-    console.log("Index: ", userById);
-    if (userById >= 0) {
-        database_1.users.splice(userById, 1);
-        res.status(200).send("User apagado com sucesso");
+    try {
+        const id = req.params.id;
+        const userById = database_1.users.findIndex((user) => {
+            return user.id === id;
+        });
+        console.log("Index: ", userById);
+        if (userById >= 0) {
+            database_1.users.splice(userById, 1);
+            res.status(200).send("Usuario apagado com sucesso");
+        }
+        else {
+            res.status(404).send("Usuario não existe");
+        }
     }
-    else {
-        res.status(404).send("Usuario não encontrado");
+    catch (error) {
+        console.log(error);
+        if (res.statusCode === 200) {
+            res.status(500);
+        }
+        res.send(error.message);
     }
 });
 app.delete("/products/:id", (req, res) => {
-    const id = req.params.id;
-    const productById = database_1.products.findIndex((product) => {
-        return product.id === id;
-    });
-    console.log("Index: ", productById);
-    if (productById >= 0) {
-        database_1.products.splice(productById, 1);
-        res.status(200).send("Produto apagado com sucesso");
+    try {
+        const id = req.params.id;
+        const productById = database_1.products.findIndex((product) => {
+            return product.id === id;
+        });
+        console.log("Index: ", productById);
+        if (productById >= 0) {
+            database_1.products.splice(productById, 1);
+            res.status(200).send("Produto apagado com sucesso");
+        }
+        else {
+            res.status(404).send("Produto não existe");
+        }
     }
-    else {
-        res.status(404).send("Produto não encontrado");
+    catch (error) {
+        console.log(error);
+        if (res.statusCode === 200) {
+            res.status(500);
+        }
+        res.send(error.message);
     }
 });
 app.put("/users/:id", (req, res) => {
-    const id = req.params.id;
-    const newId = req.body.id;
-    const newEmail = req.body.email;
-    const newPassword = req.body.password;
-    const user = database_1.users.find((user) => {
-        return user.id === id;
-    });
-    if (user) {
-        user.id = newId || user.id;
-        user.email = newEmail || user.email;
-        user.password = isNaN(newPassword) ? user.password : newPassword;
-        res.status(200).send("Cadastro atualizado com sucesso");
+    try {
+        const id = req.params.id;
+        const newId = req.body.id;
+        const newEmail = req.body.email;
+        const newPassword = req.body.password;
+        const user = database_1.users.find((user) => {
+            return user.id === id;
+        });
+        if (user) {
+            user.id = newId || user.id;
+            user.email = newEmail || user.email;
+            user.password = isNaN(newPassword) ? user.password : newPassword;
+            res.status(200).send("Cadastro atualizado com sucesso");
+        }
+        else {
+            res.status(404).send("Cadastro não encontrado");
+        }
     }
-    else {
-        res.status(404).send("Cadastro não encontrado");
+    catch (error) {
+        console.log(error);
+        if (res.statusCode === 200) {
+            res.status(500);
+        }
+        res.send(error.message);
     }
 });
 app.put("/products/:id", (req, res) => {
-    const id = req.params.id;
-    const newId = req.body.id;
-    const newOwnerName = req.body.name;
-    const newPrice = req.body.price;
-    const newCategory = req.body.category;
-    const product = database_1.products.find((product) => {
-        return product.id === id;
-    });
-    if (product) {
-        product.id = newId || product.id;
-        product.name = newOwnerName || product.name;
-        product.price = isNaN(newPrice) ? product.price : newPrice;
-        product.category = newCategory || product.category;
-        res.status(200).send("Produto atualizado com sucesso");
+    try {
+        const id = req.params.id;
+        const newId = req.body.id;
+        const newOwnerName = req.body.name;
+        const newPrice = req.body.price;
+        const newCategory = req.body.category;
+        const product = database_1.products.find((product) => {
+            return product.id === id;
+        });
+        if (product) {
+            product.id = newId || product.id;
+            product.name = newOwnerName || product.name;
+            product.price = isNaN(newPrice) ? product.price : newPrice;
+            product.category = newCategory || product.category;
+            res.status(200).send("Produto atualizado com sucesso");
+        }
+        else {
+            res.status(404).send("Produto não encontrado");
+        }
     }
-    else {
-        res.status(404).send("Produto não encontrado");
+    catch (error) {
+        console.log(error);
+        if (res.statusCode === 200) {
+            res.status(500);
+        }
+        res.send(error.message);
     }
 });
 //# sourceMappingURL=index.js.map
