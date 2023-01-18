@@ -22,9 +22,9 @@ PRAGMA table_info ('products');
 INSERT INTO
     users (id, email, password)
 VALUES
-(001, "001u@biga.com", "0012345"), 
-(002, "002u@biga.com", "0022345"), 
-(003, "003u@biga.com", "0012345");
+("001", "001u@biga.com", "0012345"), 
+("002", "002u@biga.com", "0022345"), 
+("003", "003u@biga.com", "0012345");
 
 INSERT INTO
     products (id, name, price, category)
@@ -102,6 +102,15 @@ WHERE id = 2;
 -- Edit Product by id
 -- mocke valores para editar um product
 -- edite a linha baseada nos valores mockados
+
+UPDATE products
+SET
+	name = "tenis",
+	price = 10,
+    category = "Roupas e Calçados"
+WHERE id = 2;
+
+
 INSERT INTO products (id, name, price, category)
 VALUES 
 ("7", "celular", 350, "Eletronicos"),
@@ -133,3 +142,71 @@ WHERE
 	price >= 300
 	and price <= 1000
 ORDER BY price ASC;	
+
+---relações sql  1
+
+--Exercicio 1
+
+-- Criação da tabela de pedidos
+-- nome da tabela: purchases
+-- colunas da tabela:
+-- id (TEXT, PK, único e obrigatório)
+-- total_price (REAL, único e obrigatório)
+-- paid (INTEGER e obrigatório)
+-- delivered_at (TEXT e opcional)
+-- buyer_id (TEXT, obrigatório e FK = referencia a coluna id da tabela users)
+
+CREATE TABLE
+    purchases (
+        id TEXT PRIMARY KEY UNIQUE NOT NULL,
+        total_price REAL UNIQUE NOT NULL,
+        paid INTEGER NOT NULL,
+        delivered_at TEXT,
+        buyer_id TEXT NOT NULL,
+        FOREIGN KEY (buyer_id) REFERENCES users (id)        
+);
+
+DROP TABLE purchases;
+
+--Exercicio 2
+
+-- a) Crie dois pedidos para cada usuário cadastrado
+-- No mínimo 4 no total 
+-- (ou seja, pelo menos 2 usuários diferentes) 
+-- e devem iniciar com a data de entrega nula.
+
+ INSERT INTO purchases (id, total_price, paid, buyer_id)
+VALUES
+    ("pu001", 60, 0, "001"),
+    ("pu002", 20, 0, "002" );
+
+    INSERT INTO purchases (id, total_price, paid, buyer_id)
+VALUES
+    ("pu003", 10, 0, "002"),
+    ("pu004", 30, 0, "003");
+
+
+-- b) Edite o status da data de entrega de um pedido
+-- Simule que o pedido foi entregue no exato momento da sua edição 
+-- (ou seja, data atual).
+
+UPDATE purchases
+SET paid = 1,
+    delivered_at = DATETIME('now')
+WHERE id = "pu001";
+
+SELECT * FROM purchases;
+
+-- Exercício 3
+
+-- Crie a query de consulta utilizando junção
+-- para simular um endpoint de histórico
+--  de compras de um determinado usuário.
+-- Mocke um valor para a id do comprador,
+-- ela deve ser uma das que foram utilizadas
+-- no exercício 2.
+
+SELECT * FROM purchases
+INNER JOIN users
+ON purchases.buyer_id = users.id
+WHERE users.id = "001"
