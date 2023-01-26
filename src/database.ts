@@ -8,11 +8,13 @@ import {
 export const users: TUser[] = [
   {
     id: "u1",
+    name: "Um",
     email: "u1@guser.com",
     password: "1u"
   },
   {
     id: "u2",
+    name: "Dois",
     email: "u2@guser.com",
     password: "2u"
   }
@@ -48,9 +50,10 @@ export const purchase: TPurchase[] = [
   // }
 ]
 
-export function createUser(id: string, email: string, password: string): TUser[] {
+export function createUser(id: string, name: string, email: string, password: string): TUser[] {
   const userToAdd = {
     id: id,
+    name: name,
     email: email,
     password: password
   }
@@ -102,21 +105,22 @@ export function queryProductsByName (q: string): TProduto[] | undefined {
   })
 }
 
-export function createPurchase(userId: string, productId: string, quantity: number, totalPrice: number): TPurchase[] {
-  const purchaseToAdd = {
-    userId,
-    productId,
-    quantity,
-    totalPrice
-  }
-  const newPurchase = [...purchase, purchaseToAdd]
-  console.log("Compra realizada com sucesso")
-  return newPurchase
-}
+// export function createPurchase(id: string, purchased_product_id: string, created_at: number, paid: number, quantity: number, buyer_id: string, total_price: number,): TPurchase[] {
+//   const purchaseToAdd = {
+//     id,
+//     purchased_product_id,
+//     created_at,
+//     paid,
+//     quantity,
+//     buyer_id,
+//     total_price,
+//   }
+  
+// }
 
 export function getAllPurchasesFromUserId(userIdToSearch: string): TPurchase[] | undefined {
   return purchase.filter((purchase) => {
-    if (purchase.userId === userIdToSearch) {
+    if (purchase.id === userIdToSearch) {
       return purchase
     }
   })

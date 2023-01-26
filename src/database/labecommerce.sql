@@ -4,6 +4,7 @@
 
 CREATE TABLE users (
     id TEXT PRIMARY KEY UNIQUE NOT NULL,
+    name TEXT NOT NULL,
     email TEXT UNIQUE NOT NULL,
     password TEXT NOT NULL
 );
@@ -21,13 +22,26 @@ CREATE TABLE products (
     PRAGMA table_info ('products');
     DROP TABLE products;
 
-CREATE TABLE purchases (
-    id TEXT PRIMARY KEY UNIQUE NOT NULL,
-    total_price REAL UNIQUE NOT NULL,
-    paid INTEGER NOT NULL,
-    delivered_at TEXT,
-    buyer_id TEXT NOT NULL,
-    FOREIGN KEY (buyer_id) REFERENCES users (id)        
+-- CREATE TABLE purchases (
+--     id TEXT PRIMARY KEY UNIQUE NOT NULL, 
+--     purchased_product_id TEXT NOT NULL,
+--     created_at  TEXT NOT NULL,
+--     paid INTEGER NOT NULL,
+--     quantity INTEGER,
+--     buyer_id TEXT NOT NULL,
+--     total_price REAL NOT NULL,
+--     FOREIGN KEY (buyer_id) REFERENCES users (id)        
+-- );
+
+CREATE TABLE
+    purchases (
+        id TEXT PRIMARY KEY UNIQUE NOT NULL,
+        buyer_id TEXT NOT NULL,
+       -- quantity REAL DEFAULT(0) NOT NULL,  
+        total_price REAL DEFAULT(0) NOT NULL,      
+        created_at TEXT NOT NULL DEFAULT(DATETIME()),
+        paid INTEGER DEFAULT(0) NOT NULL,
+        FOREIGN KEY (buyer_id) REFERENCES users (id)        
 );
 
     PRAGMA table_info ('purchases');
@@ -46,14 +60,14 @@ CREATE TABLE purchases_products (
 
 ---população
 
-INSERT INTO users (id, email, password)
+INSERT INTO users (id, name, email, password)
 VALUES
-("u001", "u1@biga.com", "u001"), 
-("u002", "u2@biga.com", "u002"), 
-("u003", "u3@biga.com", "u003");
-INSERT INTO users (id, email, password)
+("u001", "Um", "u1@biga.com", "u001"), 
+("u002", "Dois", "u2@biga.com", "u002"), 
+("u003", "Tres", "u3@biga.com", "u003");
+INSERT INTO users (id, name, email, password)
 VALUES 
-("u004", "u4@email.com", "u004");
+("u004", "Quatro", "u4@email.com", "u004");
 
     DELETE FROM users;
     SELECT * FROM users;
@@ -78,21 +92,22 @@ VALUES
     DELETE FROM products;
     SELECT * FROM products;
 
- INSERT INTO purchases (id, total_price, paid, buyer_id)
+INSERT INTO purchases (id, buyer_id, total_price )
 VALUES
-("pu001", 60, 0, "u001"),
-("pu002", 20, 0, "u002" );
-INSERT INTO purchases (id, total_price, paid, buyer_id)
+    ("pu001", "u001", 60),
+    ("pu002", "u002", 20);
+
+    INSERT INTO purchases (id, buyer_id, total_price)
 VALUES
-("pu003", 10, 0, "u002"),
-("pu004", 30, 0, "u003");
+    ("pu003", "u001", 10),
+    ("pu004", "u003", 20);
 
     DELETE FROM purchases;
     SELECT * FROM purchases;
 
 UPDATE purchases
 SET paid = 1,
-    delivered_at = DATETIME('now')
+    delivered_at = DATETIME('now') ---pode-se incluir o delivered_at pra quando for feito o pagamento o paid mudar pra 1 e me dizer quando foi isso.
 WHERE id = "pu003";
 
 
@@ -109,16 +124,17 @@ WHERE id = "p001";
 
 
 DELETE FROM users
-WHERE id = 1;
+WHERE id = "u001";
 
 DELETE FROM products
 WHERE id = 1;
 
 UPDATE users
 SET
+    name = "Marcelo",
 	email = "mb@email.com",
 	password = "0987"
-WHERE id = 2;
+WHERE id = "u002";
 
 
 UPDATE products
