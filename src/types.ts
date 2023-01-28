@@ -12,22 +12,38 @@ export type TUser = {
     password: string | number,
   }
 
-export type TProduto = {
+export type TProduct = {
     id: string,
-    name: string
-    price: number
-    category: string,
-} 
+    name: string,
+    price: number,
+    description:string,
+    imagemUrl: string
+}
 
 export type TPurchase = {
     id: string,
-    paid: number,
-    quantity: number,
     buyer_id: string,
-    total_price: number
+    //quantity: number,
+    total_price: number,
+    //created_at: string,
+    paid: number,
+   
 } 
 
+export type TPurchasesProducts ={
+  purchase_id: string,
+  product_id: string,
+  quantity: number,
 
+}
+
+export type TProductsInPurchase = {
+  id:string
+  buyer_id: string
+  total_price: number
+  paid:number
+  products:TProduct[]
+}
 
 
 
