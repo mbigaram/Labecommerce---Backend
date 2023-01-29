@@ -54,12 +54,12 @@ CREATE TABLE purchases_products (
 
 INSERT INTO users (id, name, email, password)
 VALUES
-("u001", "Um", "u1@biga.com", "u001"), 
-("u002", "Dois", "u2@biga.com", "u002"), 
-("u003", "Tres", "u3@biga.com", "u003");
+("u001", "Marcelo", "u1@biga.com", "u001"), 
+("u002", "Silmara", "u2@biga.com", "u002"), 
+("u003", "Gisela", "u3@biga.com", "u003");
 INSERT INTO users (id, name, email, password)
 VALUES 
-("u004", "Quatro", "u4@email.com", "u004");
+("u004", "Penny", "u4@email.com", "u004");
 
     DELETE FROM users;
     SELECT * FROM users;
