@@ -45,5 +45,15 @@ export type TProductsInPurchase = {
   products:TProduct[]
 }
 
+export type TPurchases_products = {
+  purchase_id: string, 
+  product_id: string,
+  quantity:number,
+}
+export type TProductToBuy = {
+  productId: string,
+  quantity: number
+}
+
 
 
