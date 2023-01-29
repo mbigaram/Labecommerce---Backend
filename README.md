@@ -52,7 +52,7 @@ https://documenter.getpostman.com/view/24461006/2s935hQSRe
 Servidor rodando na porta 3003.
 
 :alien: Sobre mim
-Me chamo :part_alternation_mark:arcelo! Sou desenvolvedor full-stack.
+- Me chamo :part_alternation_mark:arcelo! Sou desenvolvedor full-stack.
 
 ## 🔗 Links
 
